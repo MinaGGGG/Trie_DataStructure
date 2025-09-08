@@ -40,7 +40,7 @@ private:
         for (int i = 0; i < 26; i++) {
             if (node->children[i]) {
                 char nextChar = 'a'+i;
-                findAllWords(node->children[i], currentWord, results);
+                findAllWords(node->children[i], currentWord + nextChar, results); // rahma:currentWord + nextChar to complete the actual word 
             }
         }
     }
@@ -60,6 +60,16 @@ public:
     // Purpose: Add a word to the Trie by creating nodes for each character
     void insert(string word) {     //rahma
         // TODO: Implement this function
+        TrieNode* node = root;
+        for (int i = 0; i < word.length(); i++) {
+            char c = word[i];
+            int index =c-'a'; // to get the index of the character ex:a-'a'=0
+            if (!node->children[index]) {
+                node->children[index] = new TrieNode(); // new node to represent the  new char & new Sequence
+            }
+            node = node->children[index];
+        }
+        node->isEndOfWord = true; //marke the end 
     }
 
     // Search for a word in the Trie
