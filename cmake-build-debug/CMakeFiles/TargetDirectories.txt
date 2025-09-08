@@ -1,0 +1,3 @@
+D:/Mina/Fuzetek/Trie_DataStructue/cmake-build-debug/CMakeFiles/Trie_DataStructue.dir
+D:/Mina/Fuzetek/Trie_DataStructue/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/Mina/Fuzetek/Trie_DataStructue/cmake-build-debug/CMakeFiles/rebuild_cache.dir
