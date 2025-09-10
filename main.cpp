@@ -393,16 +393,16 @@ int main() {
     cout << "\n7. Testing bonus functions:" << endl;
     cout << "============================" << endl;
 
-    cout << "Word count: " << trie.count_word() << endl;
+    cout << "Word count:expected 13 | actual : " << trie.count_word() << endl;
 
     cout << "Removing 'banana'" << endl;
     trie.remove_word("banana");
-    cout << "Search 'banana': " << (trie.search("banana") ? "FOUND" : "NOT FOUND") << endl;
+    cout << "Search 'banana': (Expected: NOT FOUND) | Actual: " << (trie.search("banana") ? "FOUND" : "NOT FOUND") << endl;
 
-    cout << "Spell check for 'appl':" << endl;
+    cout << "Spell check for 'appl'(Expected: suggestions like 'apple', 'apply'):" << endl;
     trie.checkSpelling("appl");
 
-    cout << "Longest word in Trie: " << trie.find_longest_word() << endl;
+    cout << "Longest word in Trie:( Expected: 'application') | Actual: " << trie.find_longest_word() << endl;
 
 
     return 0;
