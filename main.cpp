@@ -345,7 +345,7 @@ int main() {
     cout << "\n5. Testing with additional words:" << endl;
     cout << "================================" << endl;
 
-    vector<string> additionalWords = {"application", "appetizer", "banister", "bandana", "oracle", "grapefruit"};
+    vector<string> additionalWords = {"application", "appetizer", "banister", "banana", "oracle", "grapefruit"};
     for (const string& word : additionalWords) {
         trie.insert(word);
         cout << "Inserted: " << word << endl;
@@ -387,6 +387,23 @@ int main() {
     }
 
     cout << "\n=== ALL TESTS COMPLETED ===" << endl;
+
+    // Test 7: Bonus functions 
+
+    cout << "\n7. Testing bonus functions:" << endl;
+    cout << "============================" << endl;
+
+    cout << "Word count: " << trie.count_word() << endl;
+
+    cout << "Removing 'banana'" << endl;
+    trie.remove_word("banana");
+    cout << "Search 'banana': " << (trie.search("banana") ? "FOUND" : "NOT FOUND") << endl;
+
+    cout << "Spell check for 'appl':" << endl;
+    trie.checkSpelling("appl");
+
+    cout << "Longest word in Trie: " << trie.find_longest_word() << endl;
+
 
     return 0;
 }
