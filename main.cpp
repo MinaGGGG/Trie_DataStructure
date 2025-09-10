@@ -63,7 +63,17 @@ public:
         TrieNode* node = root;
         for (int i = 0; i < word.length(); i++) {
             char c = word[i];
+
+            //mina : handle uppercase
+            if (c >= 'A' && c <= 'Z'){
+                c = c - 'A' + 'a';
+            }
+
             int index =c-'a'; // to get the index of the character ex:a-'a'=0
+
+            // mina: skip non-alphabit characters
+            if (index < 0 || index >= 26) continue;
+
             if (!node->children[index]) {
                 node->children[index] = new TrieNode(); // new node to represent the  new char & new Sequence
             }
@@ -77,17 +87,41 @@ public:
     // Output: boolean indicating if the word exists
     // Purpose: Check if the complete word exists in the Trie
     bool search(string word) {   //George
-        // TODO: Implement this function
-        return false; // placeholder
+        TrieNode* node = root;
+        for (char& c : word) {
+            if (c >= 'A' && c <= 'Z') {
+                c = c - 'A' + 'a';  // normalize to lowercase
+            }
+            int index = c - 'a';
+
+            if (index < 0 || index >= 26) return false;
+
+            if (!node->children[index]) return false;
+
+            node = node->children[index];
+        }
+        return node && node->isEndOfWord;
     }
+
 
     // Check if any word starts with the given prefix
     // Input: prefix to check (string)
     // Output: boolean indicating if any word has this prefix
     // Purpose: Verify if the prefix exists in the Trie (doesn't need to be a complete word)
     bool startsWith(string prefix) {  //Ahmed
-        // TODO: Implement this function
-        return false; // placeholder
+        TrieNode* node = root;
+        for(char& c : prefix){
+            if(c >= 'A' && c <= 'Z'){
+                c = c - 'A' + 'a';
+            }
+            int index = c - 'a';
+            if( index < 0 || index >= 20) return false ;
+
+            if (!node->children[index]) return false;
+            
+            node = node->children[index];
+        }
+        return true;
     }
 
     // Get all words that start with the given prefix
@@ -96,7 +130,22 @@ public:
     // Purpose: Find all complete words that begin with the given prefix
     vector<string> autocomplete(string prefix) {  //Abdo
         vector<string> suggestions;
-        // TODO: Implement this function
+        TrieNode* node = root;
+
+        string lowerPrefix = prefix;
+        for(char& c : lowerPrefix){
+            if (c >= 'A' && c <= 'Z') {
+                c = c - 'A' + 'a';
+            }
+            int index = c - 'a';
+            if (index < 0 || index >= 26) return suggestions;
+
+            if (!node->children[index]) return suggestions; // prefix not found
+            node = node->children[index];
+        }
+
+        // find all words from this node
+        findAllWords(node, lowerPrefix, suggestions);
         return suggestions;
     }
 };
