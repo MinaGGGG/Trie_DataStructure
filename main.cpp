@@ -19,6 +19,7 @@ public:
             children[i] = nullptr;
         }
     }
+    
 };
 
 // The Trie class
@@ -30,6 +31,14 @@ private:
     // Input: current node, current word formed so far, results vector to store words
     // Output: none (modifies results vector by reference)
     // Purpose: Recursively find all complete words starting from the given node
+    
+    void clear(TrieNode* node){
+        if (!node) return;
+        for (int i = 0; i < 26; ++i) {
+            clear(node->children[i]);
+        }
+        delete node;
+    }
     void findAllWords(TrieNode* node, string currentWord, vector<string>& results) {   // mina Gamil
         if (!node) return;
 
@@ -44,7 +53,60 @@ private:
             }
         }
     }
+    //helper function to count words
+    int help_count_word(TrieNode* node) {
+        int count = 0;
+        if (!node) { return 0; }
+        if (node->isEndOfWord) { count++; }
+        for (int i = 0; i < 26; i++) {
+            count += help_count_word(node->children[i]);
+        }
+        return count;
+    }
+    bool helper_remove_word(TrieNode* node, const string& word, int depth) {
+        if (!node) { return false; }
+        if (depth == word.size()) {
+            if (!node->isEndOfWord) { return false; }
+            node->isEndOfWord = false;
+            for (int i = 0; i < 26; ++i) {
+                if (node->children[i]) return false;
+            }
+                return true;
+            }
+            int index = word[depth] - 'a';
+            if (!node->children[index]) return false; // Word not found
 
+            bool delete_Child = helper_remove_word(node->children[index], word, depth + 1);
+
+            if (delete_Child) {
+                delete node->children[index];
+                node->children[index] = nullptr;
+                if (!node->isEndOfWord) {
+                    for (int i = 0; i < 26; ++i) {
+                        if (node->children[i]) { return false; }
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+    string  longest_word(TrieNode* node, string current, string& longest) {
+        if (!node) {
+            return longest;
+        }
+        if (node->isEndOfWord) {
+            if (current.length() > longest.length()) {
+                longest = current;
+            }
+        }
+        for (int i = 0; i < 26; i++) {
+            if (node->children[i]) {
+                char c = 'a' + i;
+                longest_word(node->children[i], current + c, longest);
+            }
+        }
+        return longest;
+    }
 public:
     // Constructor
     // Input: none
@@ -52,6 +114,12 @@ public:
     // Purpose: Initialize the Trie with a root node
     Trie() {
         root = new TrieNode();
+    }
+
+    // adding destructor to avoid memory leak 
+
+    ~Trie() {
+        clear(root);
     }
 
     // Insert a word into the Trie
@@ -68,7 +136,6 @@ public:
             if (c >= 'A' && c <= 'Z'){
                 c = c - 'A' + 'a';
             }
-
             int index =c-'a'; // to get the index of the character ex:a-'a'=0
 
             // mina: skip non-alphabit characters
@@ -115,7 +182,7 @@ public:
                 c = c - 'A' + 'a';
             }
             int index = c - 'a';
-            if( index < 0 || index >= 20) return false ;
+            if( index < 0 || index >= 26) return false ;
 
             if (!node->children[index]) return false;
             
@@ -148,6 +215,39 @@ public:
         findAllWords(node, lowerPrefix, suggestions);
         return suggestions;
     }
+    //bouns fuction
+   
+    int count_word() {
+            return help_count_word(root);// call it to print the final value in the main function
+    }
+
+    bool remove_word(const string& word) {
+        return helper_remove_word(root, word, 0);
+    }
+    void checkSpelling(string word) {
+        if (search(word)) {
+            cout << word << endl;
+        }
+        else {
+            cout << word << " is NOT correct " << endl;
+            cout << "Did you mean: "  << endl;
+            
+            vector<string> suggestions = autocomplete(word.substr(0, 2));
+            if (suggestions.empty()) {
+                cout << " - No suggestions" << endl;
+            }
+            else for (string s : suggestions){
+                cout << " - " << s << endl;
+            }
+        }
+    }
+    
+    string find_longest_word() {
+        string longest = "";
+        return longest_word(root, "", longest);
+    }
+
+
 };
 
 // Main function
